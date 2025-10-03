@@ -1,0 +1,40 @@
+import pytesseract
+from PIL import Image
+import pyttsx3
+
+engine = pyttsx3.init()  # object creation
+
+# Load the image
+img = Image.open('test.png')
+
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+# Perform OCR on the image
+text = pytesseract.image_to_string(img)
+
+# Print the recognized text
+print(text)
+
+
+""" RATE"""
+
+engine.setProperty('rate', 200)  # setting up new voice rate
+engine.setProperty('volume', 1.0)
+engine.runAndWait()
+rate = engine.getProperty('rate')  # getting details of current speaking rate
+print(rate)  # printing current voice rate
+volume = engine.getProperty('volume')  # getting to know current volume level (min=0 and max=1)
+print(volume)  # printing current volume level
+
+"""VOICE"""
+voices = engine.getProperty('voices')  # getting details of current voice
+engine.setProperty('voice', voices[1].id)  # changing index, changes voices. 1 for female/ 0 for male
+engine.runAndWait()
+
+engine.say('the image text is ' + str(text))
+engine.runAndWait()
+engine.stop()
+
+"""Saving Voice to a file"""
+# On linux make sure that 'espeak' and 'ffmpeg' are installed
+engine.save_to_file('Hello World', 'text.mp3')
+engine.runAndWait()
